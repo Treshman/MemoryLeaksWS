@@ -1,0 +1,77 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.mustashioid.memoryleaksws"
+        minSdkVersion 14
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        dexInProcess false
+    }
+
+    lintOptions {
+        disable 'GoogleAppIndexingWarning'
+    }
+
+    // TODO 1. Define dev/pro flavors OR simply keep debug/release buildTypes
+    flavorDimensions "dev"
+    productFlavors {
+
+        // Dev build has Dev Tools and Dev Menu
+        // Logs, LeakCanary, etc
+        dev {
+            dimension "dev"
+        }
+
+        // Prod build has no Dev Tools and Dev Menu
+        prod {
+            dimension "dev"
+        }
+    }
+}
+
+dependencies {
+    // TODO 2. Dependencies. Add LeakCanary for MemoryLeaks detection and other libs.
+    devCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+//  It's optional since we have Proxy for LeakCanary!
+//  prodCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+//  testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    // Android device shake detection to show Dev Menu.
+    // https://github.com/square/seismic
+    devCompile 'com.squareup:seismic:1.0.2'
+
+    // TODO 3. Notifications. Integrate automatic notification when MemoryLeak is found.
+    // Send Emails in Background. Needed for Notifying Devs about MemoryLeaks!
+    // Can be changed to Github/Jira/Slack/Hipchat/Trelo/Bugzilla anything you use for tracking issues.
+//    compile 'com.github.yesidlazaro:GmailBackground:1.2.0'
+    // Efficient logger tool
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
+    // default deps
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:25.3.1'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:25.3.1'
+}
